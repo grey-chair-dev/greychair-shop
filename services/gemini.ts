@@ -12,17 +12,25 @@ function getGeminiApiKey(): string | undefined {
   return legacyKey;
 }
 
-const apiKey = getGeminiApiKey();
-if (!apiKey) {
-  throw new Error(
-    "Missing Gemini API key. Set VITE_GEMINI_API_KEY in greychair-shop/.env.local (or configure the legacy process.env.API_KEY injection)."
-  );
+let ai: GoogleGenAI | null = null;
+
+function getClient(): GoogleGenAI {
+  if (ai) return ai;
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) {
+    // Important: do NOT throw at module import time. This should only fail when the user
+    // actually tries to call the Tea Finder, so the UI can handle it gracefully.
+    throw new Error(
+      "Missing Gemini API key. Set VITE_GEMINI_API_KEY in greychair-shop/.env.local and restart the dev server."
+    );
+  }
+  ai = new GoogleGenAI({ apiKey });
+  return ai;
 }
 
-const ai = new GoogleGenAI({ apiKey });
-
 export const getTeaRecommendation = async (userPrompt: string): Promise<TeaRecommendation> => {
-  const response = await ai.models.generateContent({
+  const client = getClient();
+  const response = await client.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: `Recommend a specific tea for this request: "${userPrompt}". 
     The shop is 'Grey Chair Tea' in Batavia, Ohio. Keep the description direct and helpful.`,
