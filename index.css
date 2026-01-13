@@ -1,6 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tailwind v4 source globs (ensures all TSX files are scanned for classes) */
+@source "./index.html";
+@source "./App.tsx";
+@source "./index.tsx";
+@source "./components/**/*.{ts,tsx}";
 
 /* App base styling previously inlined in index.html */
 body {
