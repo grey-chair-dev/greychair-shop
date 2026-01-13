@@ -7,17 +7,24 @@ const TeaFinderAI: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [recommendation, setRecommendation] = useState<TeaRecommendation | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       const result = await getTeaRecommendation(prompt);
       setRecommendation(result);
     } catch (error) {
       console.error("Search failed:", error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Search failed. Please try again.";
+      setErrorMessage(message);
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +56,18 @@ const TeaFinderAI: React.FC = () => {
           {isLoading ? '...' : 'Find it'}
         </button>
       </form>
+
+      {errorMessage && (
+        <div className="max-w-xl mx-auto mb-10 rounded-2xl border border-red-200 bg-red-50 px-6 py-4 text-left">
+          <p className="text-sm font-semibold text-red-800 mb-1">Tea Finder error</p>
+          <p className="text-sm text-red-700">{errorMessage}</p>
+          {errorMessage.toLowerCase().includes("api key") && (
+            <p className="text-xs text-red-700 mt-2">
+              Add <span className="font-mono">VITE_GEMINI_API_KEY</span> to <span className="font-mono">greychair-shop/.env.local</span> and restart the dev server.
+            </p>
+          )}
+        </div>
+      )}
 
       {recommendation && (
         <div className="bg-[#5B7B5C]/5 p-8 rounded-[40px] text-left border border-[#5B7B5C]/10 animate-in fade-in duration-500">

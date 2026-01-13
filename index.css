@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App base styling previously inlined in index.html */
+body {
+  font-family: 'Inter', sans-serif;
+  color: #2D3436;
+  background-color: #FDFCF8;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Crimson Pro', serif;
+}
+
+.tea-glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+@media print {
+  nav, footer, .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .recipe-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+  .shadow-xl, .shadow-sm {
+    box-shadow: none !important;
+    border: 1px solid #eee !important;
+  }
+}
+

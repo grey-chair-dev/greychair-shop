@@ -24,7 +24,7 @@ npm install
 2. Create `greychair-shop/.env.local` and set your Gemini key:
 
 ```bash
-GEMINI_API_KEY=YOUR_KEY_HERE
+VITE_GEMINI_API_KEY=YOUR_KEY_HERE
 ```
 
 3. Start the dev server:
@@ -44,7 +44,9 @@ npm run preview
 
 ## Notes on the Gemini key
 
-This app reads the key via `process.env.API_KEY` at runtime (Vite injects `GEMINI_API_KEY` into `process.env.API_KEY`), so `GEMINI_API_KEY` must be present in your local env files.
+This app reads the key via `import.meta.env.VITE_GEMINI_API_KEY` (bundled into the frontend). If it’s missing, the Tea Finder will show an error message instead of crashing.
+
+For a real production deployment, proxy Gemini requests through a backend so you don’t ship an API key to browsers.
 
 ## Project structure (high level)
 
